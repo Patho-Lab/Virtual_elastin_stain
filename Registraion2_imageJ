@@ -196,9 +196,9 @@ function processFolderPair(fixedImageFolder, movingImageFolder, fixedImagePrefix
 
 // Main script
 // Define parent directories
-heParent = "/home/chan87/Desktop/training_elastic_second/he";
-ffParent = "/home/chan87/Desktop/training_elastic_second/ff";
-outputFolder = "/home/chan87/Desktop/training_elastic_second/tmp";
+heParent = "";
+ffParent = "";
+outputFolder = "";
 
 // SIFT parameters
 siftParams = "initial_gaussian_blur=1.60 " +
