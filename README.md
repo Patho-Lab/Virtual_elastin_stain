@@ -1,5 +1,9 @@
 # Deep Learning-Based Virtual Elastin Staining for VPI Assessment in NSCLC
 
+[![Paper](https://img.shields.io/badge/paper-Scientific%20Publication-blue)](https://link-to-your-paper.com) <!---TODO: Add link to your published paper--->
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15881230.svg)](https://doi.org/10.5281/zenodo.15881230)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 This repository contains the code for the paper **"Deep Learning-Based Virtual Elastin Staining Improves Visceral Pleural Invasion Assessment in Lung Cancer"**.
 
 This project introduces a deep learning pipeline to generate virtual elastin stains directly from standard Hematoxylin and Eosin (H&E) whole-slide images (WSIs). Accurate assessment of Visceral Pleural Invasion (VPI) in non-small cell lung cancer (NSCLC) is challenging on H&E alone due to poor elastin contrast. Our method leverages the intrinsic Eosin-Based Elastin Fluorescence (EBEF) from H&E slides to create a perfectly co-registered ground-truth dataset. This enables a conditional Generative Adversarial Network (cGAN) to perform a high-fidelity image-to-image translation, producing a synthetic EBEF image that enhances elastin visualization for pathologists.
@@ -17,12 +21,27 @@ The end-to-end pipeline consists of a preprocessing stage to create aligned trai
 
 ### Prerequisites
 *   Python 3.8+
-*   PyTorch
+*   PyTorch, OpenSlide, Scikit-image, Pandas, NumPy
 *   Docker
 *   [Fiji/ImageJ](https://imagej.net/software/fiji/) with the "Linear Stack Alignment with SIFT" plugin.
 *   [QuPath](https://qupath.github.io/) for post-processing and visualization.
 
+### Installation
 
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/your-username/your-repo.git
+    cd your-repo
+    ```
+
+2.  **Install Python dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+3.  **Setup for Registration:**
+    *   **VALIS (Global Registration):** Follow the setup instructions in `Modified_Valis/README.md`, which typically involves building or pulling a Docker container.
+    *   **SIFT (Local Registration):** Ensure Fiji/ImageJ is installed and follow the setup guide in `Registration_SIFT/README.md`.
 
 ## Usage
 
@@ -35,13 +54,13 @@ This pipeline processes paired H&E and fluorescence WSIs to produce precisely co
 1.  **Global WSI Registration (`Modified_Valis`)**:
     Performs an initial, coarse alignment of the H&E and fluorescence WSIs at the slide level. See `Modified_Valis/README.md` for the detailed workflow.
 
-2.  **Otsu Threshold Calculation**:
-    Computes an Otsu threshold from `.svs` WSIs to help identify and filter out tiles with low tissue content.
+2.  **Otsu Threshold Calculation (`calculate_otsu_threshold.py`)**:
+    This script processes all `.svs` files in a directory to determine an optimal threshold for separating tissue from background. It creates a low-resolution thumbnail of each WSI, calculates the Otsu threshold, and saves the results to a CSV file. This information is used in subsequent steps to filter out non-tissue tiles.
     ```bash
-    python calculate_otsu_threshold.py --input_dir /path/to/svs_files/
+    python calculate_otsu_threshold.py --input-dir /path/to/svs_files/ --output-csv /path/to/thresholds.csv
     ```
 
-3.  **Tile Filtering**:
+3.  **Tile Filtering (`remove_white_tiles.py`)**:
     Removes tiles that are mostly background (white space) based on the calculated thresholds.
     ```bash
     python remove_white_tiles.py --tile_dir /path/to/tiles/ --threshold 220
@@ -107,9 +126,9 @@ If you use this code or our findings in your research, please cite our paper:
 ```bibtex
 @article{your_article_citation,
   title={Deep Learning-Based Virtual Elastin Staining Improves Visceral Pleural Invasion Assessment in Lung Cancer},
-  author={Chenglong Wang, e.t.,},
+  author={Your, Name and et, al.},
   journal={Journal Name},
   year={2024},
-  volume={},
-  pages={}
+  volume={XX},
+  pages={XX-XX}
 }
