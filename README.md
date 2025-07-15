@@ -1,8 +1,5 @@
 # Deep Learning-Based Virtual Elastin Staining for VPI Assessment in NSCLC
 
-[![Paper](https://img.shields.io/badge/paper-Scientific%20Publication-blue)](https://link-to-your-paper.com) <!---TODO: Add link to your published paper--->
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15881230.svg)](https://doi.org/10.5281/zenodo.15881230)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 This repository contains the code for the paper **"Deep Learning-Based Virtual Elastin Staining Improves Visceral Pleural Invasion Assessment in Lung Cancer"**.
 
@@ -14,8 +11,8 @@ The virtual stain significantly improves VPI assessment accuracy, offering a pra
 
 The end-to-end pipeline consists of a preprocessing stage to create aligned training data, a training/inference stage using a cGAN model, and a post-processing stage to reconstruct the final image for diagnostic review.
 
-![Workflow Diagram](https://raw.githubusercontent.com/your-username/your-repo/main/path/to/figure8.png)  
-*Figure: The computational workflow, from WSI registration and tile preparation to model inference and final evaluation. (We recommend adding Figure 8 from your paper here for a visual guide).*
+![WORKFLOW](https://github.com/user-attachments/assets/dd633be9-81a4-4879-8da9-a01b7bfb4046)
+
 
 ## Getting Started
 
@@ -26,50 +23,53 @@ The end-to-end pipeline consists of a preprocessing stage to create aligned trai
 *   [Fiji/ImageJ](https://imagej.net/software/fiji/) with the "Linear Stack Alignment with SIFT" plugin.
 *   [QuPath](https://qupath.github.io/) for post-processing and visualization.
 
-### Installation
-
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/your-username/your-repo.git
-    cd your-repo
-    ```
-
-2.  **Install Python dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-3.  **Setup for Registration:**
-    *   **VALIS (Global Registration):** Follow the setup instructions in `Modified_Valis/README.md`, which typically involves building or pulling a Docker container.
-    *   **SIFT (Local Registration):** Ensure Fiji/ImageJ is installed and follow the setup guide in `Registration_SIFT/README.md`.
 
 ## Usage
 
 The workflow is divided into data preprocessing, model inference, and post-processing.
 
-### 1. Data Preprocessing Pipeline (for Training Data)
+### 1. Data Preprocessing Pipeline
 
-This pipeline processes paired H&E and fluorescence WSIs to produce precisely co-registered image tiles for training the GAN model.
+This pipeline processes paired H&E and fluorescence WSIs to produce precisely co-registered image tiles for training.
 
 1.  **Global WSI Registration (`Modified_Valis`)**:
-    Performs an initial, coarse alignment of the H&E and fluorescence WSIs at the slide level.
+    Performs an initial, coarse alignment of the H&E and fluorescence WSIs at the slide level. See `Modified_Valis/README.md` for the detailed workflow.
 
 2.  **Otsu Threshold Calculation (`calculate_otsu_threshold.py`)**:
-    Processes all `.svs` files to determine an optimal threshold for separating tissue from background and saves the results to a CSV file.
+    This script processes all `.svs` files in a directory to determine an optimal threshold for separating tissue from background. It creates a low-resolution thumbnail of each WSI, calculates the Otsu threshold, and saves the results to a CSV file.
+    ```bash
+    python calculate_otsu_threshold.py --input-dir /path/to/svs_files/ --output-csv /path/to/thresholds.csv
+    ```
 
 3.  **Tile Filtering (`remove_white_tiles.py`)**:
-    Removes image tiles that consist mostly of background using the thresholds from the previously generated CSV file.
+    This script identifies and removes image tiles (`.jpg`, `.png`) that consist mostly of background (white space). It uses the `thresholds.csv` file generated in the previous step to apply a custom white-pixel intensity threshold for each set of tiles.
+    ```bash
+    python remove_white_tiles.py --tiles-dir /path/to/extracted_tiles/ --csv-file /path/to/thresholds.csv
+    ```
 
 4.  **Color & Intensity Normalization**:
-    *   **H&E Tiles (`Reinhard_normalization.py`):** Standardizes the color profile of H&E tiles using Reinhard color normalization.
-    *   **Fluorescence Tiles (`z_score_normalize_images.py`):** Applies per-channel Z-score normalization to fluorescence image tiles.
+    *   **H&E Tiles (Reinhard) (`Reinhard_normalization.py`):** This script standardizes the color profile of H&E tiles using Reinhard color normalization from the `torchstain` library. It fits a normalizer to a user-provided `target-image` and applies it to all images found recursively in the `source-dir`.
+        ```bash
+        python Reinhard_normalization.py \
+            --target-image /path/to/target_style.png \
+            --source-dir /path/to/source_tiles/ \
+            --output-dir /path/to/normalized_tiles/
+        ```
+    *   **Fluorescence Tiles (Z-Score) (`z_score_normalize_images.py`):** This script applies per-channel Z-score normalization to fluorescence image tiles. For each image, it independently normalizes the R, G, and B channels. The resulting values are then rescaled to the `[0, 255]` range to be saved as a standard image file, preserving the original folder structure.
+        ```bash
+        python z_score_normalize_images.py \
+            --source-dir /path/to/fluorescence_tiles/ \
+            --output-dir /path/to/normalized_fluorescence_tiles/
+        ```
 
 5.  **Local Tile Registration (`Registration_SIFT`)**:
-    Performs fine-grained, local alignment on paired H&E and fluorescence tiles using SIFT in ImageJ.
+    Performs fine-grained, local alignment on paired H&E and fluorescence tiles using SIFT in ImageJ. See `Registration_SIFT/README.md` for the workflow.
 
-### 2. Inference Pipeline (for Generating Virtual Stains)
+The output of this pipeline is a dataset of perfectly aligned H&E (source) and EBEF (target) tiles, ready for model training.
 
-This pipeline takes new H&E tiles, preprocesses them, and generates the final synthetic EBEF images.
+### 2. Model Training and Inference (Pix2PixHD)
+
+The `pix2pixHD/` directory contains the code for training the model and performing inference.
 
 #### Pre-trained Models
 Trained model checkpoints are available on Zenodo:
@@ -126,11 +126,11 @@ The final steps involve reconstructing the generated tiles into a whole-slide fo
 If you use this code or our findings in your research, please cite our paper:
 
 ```bibtex
-@article{your_article_citation,
+@article{,
   title={Deep Learning-Based Virtual Elastin Staining Improves Visceral Pleural Invasion Assessment in Lung Cancer},
-  author={Your, Name and et, al.},
+  author={},
   journal={Journal Name},
-  year={2024},
-  volume={XX},
-  pages={XX-XX}
+  year={},
+  volume={},
+  pages={}
 }
