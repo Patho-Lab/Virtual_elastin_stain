@@ -23,4 +23,4 @@ The Pix2PixHD model uses the co-registered tiles from preprocessing to train or 
 
 ## Postprocessing in Qupath
 1. **Stiching_Tiles**: Stitches inferred tiles into a pyramidal OME-TIFF
-2. **Gamma Correction**: Normalizes intensities to a target average (130), aligning with Pix2PixHD input requirements.
+2. **Combine_paired_Tiff**: combining images like he.tif and f.tif (fluorescence) into a single viewer display or a pyramidal OME-TIFF file.
