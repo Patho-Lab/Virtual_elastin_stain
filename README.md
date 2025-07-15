@@ -121,9 +121,6 @@ The final steps involve reconstructing the generated tiles into a whole-slide fo
 2.  **Combine Paired TIFFs (`Combine_paired_Tiff`)**:
     This script combines the original H&E WSI and the newly generated synthetic EBEF WSI into a single multi-channel file. This allows pathologists to toggle between the H&E and virtual elastin views seamlessly within QuPath.
 
-License
--------
+## License
 
-`MIT`_ © 2025-2026 Chenglong Wang
-
-.. _MIT: License.txt
+[MIT](LICENSE.txt) © 2025-2026 Chenglong Wang
