@@ -1,0 +1,101 @@
+import javafx.application.Platform
+import qupath.lib.images.ImageData
+import qupath.lib.images.servers.ImageChannel
+import qupath.lib.images.servers.ImageServer
+import qupath.lib.images.servers.ImageServers
+import java.awt.image.BufferedImage
+import java.util.stream.Collectors
+
+import static qupath.lib.gui.scripting.QPEx.*
+import qupath.lib.images.servers.TransformedServerBuilder
+
+// Define a map from the image name to the transform that should be applied to that image
+// For no transformation, use an empty AffineTransform()
+
+def transforms = [
+        'he.tif': new java.awt.geom.AffineTransform(), // Identity transform
+        'f.tif': new java.awt.geom.AffineTransform() //Identity transform
+]
+
+
+// Define an output path where the merged file should be written
+// Recommended to use extension .ome.tif (required for a pyramidal image)
+// If null, the image will be opened in a viewer
+String pathOutput = null
+//String pathOutput = buildFilePath(PROJECT_BASE_DIR, 'merged.ome.tif')
+
+// Choose how much to downsample the output (can be *very* slow to export large images with downsample 1!)
+double outputDownsample = 1
+
+
+// Loop through the transforms to create a server that merges these
+def project = getProject()
+def servers = []
+def channels = []
+int c = 0
+for (def mapEntry : transforms.entrySet()) {
+    // Find the next image & transform
+    def name = mapEntry.getKey()
+    def transform = mapEntry.getValue()
+    if (transform == null)
+        transform = new java.awt.geom.AffineTransform()
+    def entry = project.getImageList().find {it.getImageName() == name}
+    // Read the image & check if it has stains (for deconvolution)
+    def imageData = entry.readImageData()
+    def currentServer = imageData.getServer()
+    def stains = imageData.getColorDeconvolutionStains()
+    // Nothing more to do if we have the identity trainform & no stains
+    if (transform.isIdentity() && stains == null) {
+        channels.addAll(updateChannelNames(name, currentServer.getMetadata().getChannels()))
+        servers << currentServer
+        continue
+    } else {
+        // Create a server to apply transforms
+        def builder = new TransformedServerBuilder(currentServer)
+        if (!transform.isIdentity())
+            builder.transform(transform)
+        // If we have stains, deconvolve them
+        if (stains != null) {
+            builder.deconvolveStains(stains)
+            for (int i = 1; i <= 3; i++)
+                channels << ImageChannel.getInstance(name + "-" + stains.getStain(i).getName(), ImageChannel.getDefaultChannelColor(c++))
+        } else {
+            channels.addAll(updateChannelNames(name, currentServer.getMetadata().getChannels()))
+        }
+        servers << builder.build()
+    }
+}
+
+println 'Channels: ' + channels.size()
+
+// Remove the first server - we need to use it as a basis (defining key metadata, size)
+ImageServer<BufferedImage> server = servers.remove(0)
+// If anything else remains, concatenate along the channels dimension
+if (!servers.isEmpty())
+    server = new TransformedServerBuilder(server)
+            .concatChannels(servers)
+            .build()
+
+// Write the image or open it in the viewer
+if (pathOutput != null) {
+    if (outputDownsample > 1)
+        server = ImageServers.pyramidalize(server, outputDownsample)
+    writeImage(server, pathOutput)
+} else {
+    // Create the new image & add to the project
+    def imageData = new ImageData<BufferedImage>(server)
+    setChannels(imageData, channels as ImageChannel[])
+    Platform.runLater {
+        getCurrentViewer().setImageData(imageData)
+    }
+}
+
+// Prepend a base name to channel names
+List<ImageChannel> updateChannelNames(String name, Collection<ImageChannel> channels) {
+    return channels
+            .stream()
+            .map( c -> {
+                return ImageChannel.getInstance(name + '-' + c.getName(), c.getColor())
+                }
+            ).collect(Collectors.toList())
+}
