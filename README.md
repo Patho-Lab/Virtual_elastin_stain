@@ -124,6 +124,6 @@ The final steps involve reconstructing the generated tiles into a whole-slide fo
 License
 -------
 
-`MIT`_ © 2021-2025 Chandler Gatenbee
+`MIT`_ © 2025-2026 Chenglong Wang
 
 .. _MIT: License.txt
