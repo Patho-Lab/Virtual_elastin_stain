@@ -12,5 +12,12 @@ This repository contains the code and resources for the research paper titled **
 
 The output is a set of co-registered H&E and fluorescence tiles ready for input into a GAN model to generate synthetic EBEF images for VPI assessment.
 
-## Model Training/Inference
+## Model options
 The Pix2PixHD model uses the co-registered tiles from preprocessing to train or perform inference, generating synthetic EBEF images for VPI assessment. Model options are provided in the `pix2pixHD/` folder, with trained checkpoints available at [10.5281/zenodo.15881230](https://doi.org/10.5281/zenodo.15881230).
+
+## Inference
+1. **Background Replacement**: Standardizes backgrounds using a reference image, producing masks for the next step.
+2. **Gamma Correction**: Normalizes intensities to a target average (130), aligning with Pix2PixHD input requirements.
+3. **GAN model Inference**:  Feed gamma-corrected H&E tiles into the trained Pix2PixHD model to generate synthetic EBEF fluorescence tiles.
+4. **White Tile Removal**: Removes mostly white tiles from extracted image tiles based on thresholds (`remove_white_tiles.py`).
+
