@@ -21,3 +21,6 @@ The Pix2PixHD model uses the co-registered tiles from preprocessing to train or 
 3. **GAN model Inference**:  Feed gamma-corrected H&E tiles into the trained Pix2PixHD model to generate synthetic EBEF fluorescence tiles.
 4. **White Tile Removal**: Removes mostly white tiles from extracted image tiles based on thresholds (`remove_white_tiles.py`).
 
+## Postprocessing in Qupath
+1. **Stiching_Tiles**: Stitches inferred tiles into a pyramidal OME-TIFF
+2. **Gamma Correction**: Normalizes intensities to a target average (130), aligning with Pix2PixHD input requirements.
