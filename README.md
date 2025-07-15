@@ -1,9 +1,5 @@
 # Deep Learning-Based Virtual Elastin Staining for VPI Assessment in NSCLC
 
-[![Paper](https://img.shields.io/badge/paper-Scientific%20Publication-blue)](https://link-to-your-paper.com) <!---TODO: Add link to your published paper--->
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15881230.svg)](https://doi.org/10.5281/zenodo.15881230)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
 This repository contains the code for the paper **"Deep Learning-Based Virtual Elastin Staining Improves Visceral Pleural Invasion Assessment in Lung Cancer"**.
 
 This project introduces a deep learning pipeline to generate virtual elastin stains directly from standard Hematoxylin and Eosin (H&E) whole-slide images (WSIs). Accurate assessment of Visceral Pleural Invasion (VPI) in non-small cell lung cancer (NSCLC) is challenging on H&E alone due to poor elastin contrast. Our method leverages the intrinsic Eosin-Based Elastin Fluorescence (EBEF) from H&E slides to create a perfectly co-registered ground-truth dataset. This enables a conditional Generative Adversarial Network (cGAN) to perform a high-fidelity image-to-image translation, producing a synthetic EBEF image that enhances elastin visualization for pathologists.
@@ -111,9 +107,9 @@ If you use this code or our findings in your research, please cite our paper:
 ```bibtex
 @article{your_article_citation,
   title={Deep Learning-Based Virtual Elastin Staining Improves Visceral Pleural Invasion Assessment in Lung Cancer},
-  author={Your, Name and et, al.},
+  author={Chenglong Wang, e.t.,},
   journal={Journal Name},
   year={2024},
-  volume={XX},
-  pages={XX-XX}
+  volume={},
+  pages={}
 }
