@@ -32,11 +32,6 @@ Three VALIS files were customized to optimize the registration pipeline for alig
    - **Purpose**: Orchestrates the VALIS registration workflow.
    - **Modifications**: Corrected for project-specific requirements (see below).
   
-# Define input and output directories in **step1.py**
-slide_src_dir = "/data/he"
-results_dst_dir = "/data/af"
-registered_slide_dst_dir = "/data/afr"
-reference_slide = "he.tiff"
 
 ### Workflow Steps
 
