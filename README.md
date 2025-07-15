@@ -123,4 +123,4 @@ The final steps involve reconstructing the generated tiles into a whole-slide fo
 
 ## License
 
-[MIT](LICENSE.txt) © 2025-2026 Chenglong Wang
+[MIT](License.txt) © 2025-2026 Chenglong Wang
