@@ -8,6 +8,6 @@ This repository contains the code and resources for the research paper titled **
 3. **White Tile Removal**: Removes mostly white tiles from extracted image tiles based on thresholds (`remove_white_tiles.py`).
 4. **Reinhard Normalization**: Normalizes H&E tiles to a target image’s color profile using Reinhard normalization (`normalize_images.py`).
 5. **Z-Score Normalization**: Normalizes fluorescence tiles using per-channel Z-score normalization (`z_score_normalize_images.py`).
-6. **SIFT Registration (Local Registration, Round 2)**: Performs local alignment of paired H&E and fluorescence tiles using the Scale-Invariant Feature Transform (SIFT) in ImageJ (workflow in `SIFT Registration/README.md`).
+6. **SIFT Registration (Local Registration, Round 2)**: Performs local alignment of paired H&E and fluorescence tiles using the Scale-Invariant Feature Transform (SIFT) in ImageJ (workflow in Registration_SIFT/README.md`).
 
 The output is a set of co-registered H&E and fluorescence tiles ready for input into a GAN model to generate synthetic EBEF images for VPI assessment.
