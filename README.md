@@ -129,7 +129,7 @@ If you use this code or our findings in your research, please cite our paper:
 @article{,
   title={Deep Learning-Based Virtual Elastin Staining Improves Visceral Pleural Invasion Assessment in Lung Cancer},
   author={},
-  journal={Journal Name},
+  journal={},
   year={},
   volume={},
   pages={}
