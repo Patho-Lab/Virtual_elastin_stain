@@ -63,17 +63,22 @@ This pipeline processes paired H&E and fluorescence WSIs to produce precisely co
 3.  **Tile Filtering (`remove_white_tiles.py`)**:
     Removes tiles that are mostly background (white space) based on the calculated thresholds.
     ```bash
-    python remove_white_tiles.py --tile_dir /path/to/tiles/ --threshold 220
+    python remove_white_tiles.py --tiles-dir /path/to/extracted_tiles/ --csv-file /path/to/thresholds.csv
     ```
 
 4.  **Color & Intensity Normalization**:
     *   **H&E Tiles (Reinhard):** Standardizes the color profile of H&E tiles to match a target image.
         ```bash
-        python normalize_images.py --source_dir /path/to/source_tiles/ --target_image /path/to/target.png
+        python Reinhard_normalization.py \
+            --target-image /path/to/target_style.png \
+            --source-dir /path/to/source_tiles/ \
+            --output-dir /path/to/normalized_tiles/
         ```
     *   **Fluorescence Tiles (Z-Score):** Normalizes fluorescence intensity using per-channel Z-scores.
         ```bash
-        python z_score_normalize_images.py --input_dir /path/to/fluorescence_tiles/
+        python z_score_normalize_images.py \
+            --source-dir /path/to/fluorescence_tiles/ \
+            --output-dir /path/to/normalized_fluorescence_tiles/
         ```
 
 5.  **Local Tile Registration (`Registration_SIFT`)**:
