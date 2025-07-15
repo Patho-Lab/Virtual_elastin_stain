@@ -26,22 +26,7 @@ The end-to-end pipeline consists of a preprocessing stage to create aligned trai
 *   [Fiji/ImageJ](https://imagej.net/software/fiji/) with the "Linear Stack Alignment with SIFT" plugin.
 *   [QuPath](https://qupath.github.io/) for post-processing and visualization.
 
-### Installation
 
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/your-username/your-repo.git
-    cd your-repo
-    ```
-
-2.  **Install Python dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-3.  **Setup for Registration:**
-    *   **VALIS (Global Registration):** Follow the setup instructions in `Modified_Valis/README.md`, which typically involves building or pulling a Docker container.
-    *   **SIFT (Local Registration):** Ensure Fiji/ImageJ is installed and follow the setup guide in `Registration_SIFT/README.md`.
 
 ## Usage
 
