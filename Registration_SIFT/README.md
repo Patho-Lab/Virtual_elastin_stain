@@ -1,11 +1,6 @@
 ## Workflow for ImageJ SIFT Registration: Setting Paths and Placing Image Files
 
-This workflow describes how to set directory paths and organize image files for the ImageJ script (`sift_registration.ijm`), which performs batch SIFT (Scale-Invariant Feature Transform) registration of paired Hematoxylin and Eosin (H&E) and fluorescence image tiles. The script fine-tunes local alignment of image pairs after VALIS-based global registration, producing co-registered images for training a conditional Generative Adversarial Network (cGAN) to generate synthetic Eosin-Based Elastin Fluorescence (EBEF) images for Visceral Pleural Invasion (VPI) assessment in non-small cell lung cancer (NSCLC).
-
-### Prerequisites
-- **Software**: ImageJ/Fiji with the Linear Stack Alignment with SIFT plugin installed, available from [https://imagej.net/Fiji](https://imagej.net/Fiji).
-- **Hardware**: Workstation with sufficient RAM (e.g., 128 GB) to handle image stacks, ideally with an NVIDIA GPU for downstream cGAN processing.
-- **Script**: The provided `sift_registration.ijm` script, with directory paths updated as described below.
+This workflow describes how to set directory paths and organize image files for the ImageJ script (`sift_registration.ijm`), which performs batch SIFT (Scale-Invariant Feature Transform) registration as the second round of registration to fine-tune local alignment of paired Hematoxylin and Eosin (H&E) and fluorescence image tiles. Following VALIS-based global registration, this script ensures precise pixel-level alignment of tile pairs, producing co-registered images for training a conditional Generative Adversarial Network (cGAN) to generate synthetic Eosin-Based Elastin Fluorescence (EBEF) images for Visceral Pleural Invasion (VPI) assessment in non-small cell lung cancer (NSCLC).
 
 ### Workflow Steps
 
@@ -17,23 +12,11 @@ This workflow describes how to set directory paths and organize image files for 
      ffParent = "";
      outputFolder = "";
      ```
-   - Replace the empty paths with valid directory paths on your system. For example:
-     ```ijm
-     heParent = "/home/chan87/Desktop/training_elastic_second/he";
-     ffParent = "/home/chan87/Desktop/training_elastic_second/ff";
-     outputFolder = "/home/chan87/Desktop/training_elastic_second/tmp";
-     ```
    - **Path Descriptions**:
      - `heParent`: The parent directory containing subfolders with H&E image tiles (e.g., `/home/chan87/Desktop/training_elastic_second/he`).
      - `ffParent`: The parent directory containing subfolders with fluorescence image tiles (e.g., `/home/chan87/Desktop/training_elastic_second/ff`).
      - `outputFolder`: The directory where aligned fluorescence images will be saved (e.g., `/home/chan87/Desktop/training_elastic_second/tmp`).
-   - Ensure these directories exist on your system:
-     ```bash
-     mkdir -p /home/chan87/Desktop/training_elastic_second/he
-     mkdir -p /home/chan87/Desktop/training_elastic_second/ff
-     mkdir -p /home/chan87/Desktop/training_elastic_second/tmp
-     ```
-   - Save the updated script as `sift_registration.ijm` in your working directory (e.g., `/home/chan87/Desktop/training_elastic_second/`).
+
 
 2. **Place Image Files**:
    - **H&E Images**:
